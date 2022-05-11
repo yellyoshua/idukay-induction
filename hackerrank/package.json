@@ -1,0 +1,17 @@
+{
+  "name": "samples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@jest/globals": "^28.1.0",
+    "jest": "^28.1.0"
+  }
+}
