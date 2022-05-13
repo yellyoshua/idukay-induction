@@ -213,6 +213,7 @@ describe("efficient janitor", () => {
 
 describe("efficient worker", () => {
     it("should return the minimum possible cost of the workers", () => {
+        expect(efficientWorker([ 4, 2, 8, 1, 9])).toBe(2);
         expect(efficientWorker([ 4, 1, 2, 16, 8 ])).toBe(5);
         expect(efficientWorker([
             2, 13, 12, 9,
