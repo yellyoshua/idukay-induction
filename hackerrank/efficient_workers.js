@@ -5,73 +5,95 @@ const fs = require("fs");
  * (2 - 1) + (8 - 9) = 2
 */
 
-function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
-    const pairs_by_index = {};
+function getUniquePairs(pairs = []) {
+    const sorted_pairs = pairs.sort((a, b) => {
+        return a.difference - b.difference;
+    });
 
-    const n_pairs = (efficiency.length - 1) / 2;
-    efficiency = efficiency.sort((a, b) => a - b);
-    efficiency.forEach((first_peer_val, first_peer_index) => {
-        efficiency.forEach((second_peer_val, second_peer_index) => {
-            if (first_peer_index === second_peer_index)
+    let unique_pairs = [];
+    sorted_pairs.forEach((pair) => {
+        const already_used = unique_pairs.find((unique_pair) => {
+            const pairs_already_used = [
+                unique_pair.first_peer,
+                unique_pair.second_peer,
+            ];
+            return pairs_already_used.includes(pair.first_peer) 
+                || pairs_already_used.includes(pair.second_peer);
+        });
+        
+        if (!already_used) {
+            unique_pairs.push(pair);
+        }
+        
+    });
+
+    unique_pairs = unique_pairs.sort((a, b) => a.difference - b.difference);
+
+    return unique_pairs;
+}
+
+function resultOfUniquePairs(pairs = []) {
+    let result = 0;
+    pairs.forEach((pair) => {
+        result += pair.difference;
+    });
+    return result;
+}
+
+function combinationsOfPairs(efficiency = [], ignore_index = 0) {
+    let pairs = [];
+    efficiency.forEach((first_peer_val, first_peer) => {
+        efficiency.forEach((second_peer_val, second_peer) => {
+            const active_indexes = [first_peer, second_peer];
+            if (active_indexes.includes(ignore_index)) {
                 return;
-            const pair_value = Math.abs(
+            }
+            if (first_peer === second_peer)
+                return;
+            
+            const difference = Math.abs(
                 first_peer_val
                 -
                 second_peer_val
             );
-            if (pairs_by_index[second_peer_index] &&
-                    (pairs_by_index[second_peer_index][first_peer_index]
-                        !== undefined)
-            ) {
-                return;
+
+            const new_pair = {
+                first_peer,
+                second_peer,
+                values: [first_peer_val, second_peer_val],
+                difference
             }
-            if (!pairs_by_index[first_peer_index]) {
-                pairs_by_index[first_peer_index] = {[second_peer_index]: pair_value};
-            } else {
-                pairs_by_index[first_peer_index][second_peer_index] = pair_value;
-            }
+            pairs.push(new_pair);
         });
     });
 
-    return 2;
+    return pairs;
+}
 
-    fs.writeFileSync("pairs.json", JSON.stringify(pairs_by_index, null, 2));
-    fs.writeFileSync("full-pairs.json", JSON.stringify(full_result, null, 2));
-    fs.writeFileSync("unique_pairs.json", JSON.stringify(full_result.reduce((acc, [first_peer, second_peer]) => {
-        if (acc.includes(first_peer) || acc.includes(second_peer))
-            return acc;
-        return acc.concat([first_peer, second_peer]);
-    }, []), null, 2));
-    console.log({
-        full_result,
-    })
+function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
+    const full_pairs_combinations = [];
+    full_pairs_combinations.push(
+        combinationsOfPairs(
+            efficiency.sort(),
+            2
+        )
+    );
 
-    const best_pairs = Object.keys(pairs_by_index).map(first_peer => {
-        const second_peers = pairs_by_index[first_peer];
-        const [second_peer, value] = Object.entries(second_peers)
-            .sort((a, b) => a[1] - b[1])[0];
-        
-        return [first_peer, second_peer, value];
-    }).sort((a, b) => a[2] - b[2]);
+    efficiency.forEach((_, current_index) => {
+    });
+    
+    const full_unique_pairs = full_pairs_combinations.map((pairs) => {
+        return getUniquePairs(pairs);
+    });
+    // fs.writeFileSync("full_unique_pairs.json", JSON.stringify(full_unique_pairs, null, 2));
 
-    const unique_pairs = best_pairs.reduce((acc, [first_peer, second_peer]) => {
-        if (acc.includes(first_peer) || acc.includes(second_peer))
-            return acc;
-        return acc.concat([first_peer, second_peer]);
-    }, []);
+    const full_results = full_unique_pairs.map((unique_pairs) => {
+        return resultOfUniquePairs(unique_pairs);
+    }).sort((a, b) => a - b);
 
-    // iterate n_pairs times
-    console.log({unique_pairs});
-    let result = 0;
-    for (let i = 0; i < n_pairs; i++) {
-        const first_peer = unique_pairs.shift();
-        const second_peer = unique_pairs.shift();
-        result += Math.abs(efficiency[first_peer] - efficiency[second_peer]);
-    }
+    console.log(full_results)
 
-    console.log({pairs_by_index, best_pairs, result, n_pairs});
-
-    return result
+    return full_results.shift();
 }
 
 // console.log(minResultOfPairs([ 4, 1, 2, 16, 8 ])); // 5
