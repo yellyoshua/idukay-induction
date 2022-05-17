@@ -130,7 +130,26 @@ function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
             efficiency[current_pair.second_peer] - efficiency[next_pair.second_peer]
         );
 
-    
+        if (ignore_index !== null) {
+            if ((Math.abs(ignore_index - current_pair.first_peer)) >
+                (Math.abs(current_pair.first_peer - current_pair.second_peer))
+            ) {
+                evaluations.push({
+                    first_peer: current_pair.first_peer,
+                    second_peer: current_pair.second_peer,
+                    values: [ efficiency[current_pair.first_peer], efficiency[current_pair.second_peer] ],
+                    difference: Math.abs(current_pair.first_peer - current_pair.second_peer)
+                });
+                continue;
+            } else {
+                // TODO: check if this is the best way to do this
+            }
+        }
+
+        if (current_pair.difference === next_pair.difference) {
+            evaluations.push(current_pair);
+            ignore_index = null;
+        }
         if (current_pair.difference < next_pair.difference) {
             ignore_index = null;
             evaluations.push(current_pair);
