@@ -97,41 +97,52 @@ function combinationsOfPairs(efficiency = [], ignore_index = 0) {
 }
 
 const results = [];
+
+function filterEqualPairs(arr = []) {
+    const unique = {};
+    arr.forEach((num) => {
+    if (!unique[num])
+            unique[num]= 0 ;
+    unique[num]++;
+    });
+    
+    return Object.keys(unique).filter((u) => {
+    return unique[u] % 2 !== 0;
+    }).map(Number).sort((a, b) => a - b);
+}
+
 function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
-    const full_pairs_combinations = [];
-    const efficiencies_by_value = {};
-    efficiency.forEach((element) => {
-        if (!efficiencies_by_value[element]) {
-            efficiencies_by_value[element] = 0;
+    efficiency = filterEqualPairs(efficiency);
+    const evaluations = [];
+    let ignore_index = null;
+    for (let i = 0; i < efficiency.length; i++) {
+        const current_pair = {};
+        const next_pair = {};
+
+        current_pair.first_peer = i;
+        current_pair.second_peer = i + 1;
+        next_pair.first_peer = i + 1;
+        next_pair.second_peer = i + 2;
+        current_pair.difference = Math.abs(
+            efficiency[current_pair.first_peer] - efficiency[current_pair.second_peer]
+        );
+        next_pair.difference = Math.abs(
+            efficiency[current_pair.second_peer] - efficiency[next_pair.second_peer]
+        );
+
+    
+        if (current_pair.difference < next_pair.difference) {
+            ignore_index = null;
+            evaluations.push(current_pair);
+        } else {
+            ignore_index = i;
+            evaluations.push(next_pair);
+            i++;
         }
-        efficiencies_by_value[element]++;
-    });
-
-    efficiency.forEach((_, current_index) => {
-        full_pairs_combinations.push(
-            combinationsOfPairs(
-                efficiency.sort(),
-                current_index,
-            )
-        );
-    });
-    
-    const full_unique_pairs = full_pairs_combinations.map((pairs) => {
-        return getUniquePairs(pairs);
-    });
-
-    const full_results = full_unique_pairs.map((unique_pairs) => {
-        return resultOfUniquePairs(
-            unique_pairs,
-            efficiencies_by_value,
-        );
-    }).sort((a, b) => a.result - b.result);
-
-    const first_pair = full_results.shift();
-    
-    results.push(first_pair);
-    
-    return first_pair.result;
+        
+    }
+    console.log(evaluations);
+    return 0;
 }
 
 console.log(minResultOfPairs([
