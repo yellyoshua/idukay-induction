@@ -6,12 +6,8 @@ const fs = require("fs");
 */
 
 function getUniquePairs(pairs = []) {
-    const sorted_pairs = pairs.sort((a, b) => {
-        return a.difference - b.difference;
-    });
-
     let unique_pairs = [];
-    sorted_pairs.forEach((pair) => {
+    pairs.forEach((pair) => {
         const already_used = unique_pairs.find((unique_pair) => {
             const pairs_already_used = [
                 unique_pair.first_peer,
@@ -27,21 +23,52 @@ function getUniquePairs(pairs = []) {
         
     });
 
-    unique_pairs = unique_pairs.sort((a, b) => a.difference - b.difference);
+    unique_pairs = unique_pairs.sort((a, b) => {
+        return a.difference - b.difference;
+    });
 
     return unique_pairs;
 }
 
-function resultOfUniquePairs(pairs = []) {
-    let result = 0;
+function resultOfUniquePairs(pairs = [], efficiencies_by_value = {}) {
+    const unique_pair = {
+        result: 0,
+        couples: [],
+        values_excluded: {}
+    };
+    const pairs_already_used = {};
     pairs.forEach((pair) => {
-        result += pair.difference;
+        unique_pair.couples.push(...pair.values);
+        unique_pair.result += pair.difference;
     });
-    return result;
+    pairs.map((pair) => pair.values).flat(3).forEach((pair) => {
+        if (!pairs_already_used[pair]) {
+            pairs_already_used[pair] = 0;
+        }
+        pairs_already_used[pair]++;
+    });
+
+    Object.keys(efficiencies_by_value).forEach((pair) => {
+        if (!pairs_already_used[pair]) {
+            if (!unique_pair.values_excluded[pair]) {
+                unique_pair.values_excluded[pair] = 0;
+            }
+            unique_pair.values_excluded[pair]++;
+        } else if (pairs_already_used[pair] < efficiencies_by_value[pair]) {
+            if (!unique_pair.values_excluded[pair]) {
+                unique_pair.values_excluded[pair] = 0;
+            }
+            unique_pair.values_excluded[pair] = Math.abs(
+                efficiencies_by_value[pair] - pairs_already_used[pair]
+            );
+        }
+    });
+    return unique_pair;
 }
 
 function combinationsOfPairs(efficiency = [], ignore_index = 0) {
     let pairs = [];
+
     efficiency.forEach((first_peer_val, first_peer) => {
         efficiency.forEach((second_peer_val, second_peer) => {
             const active_indexes = [first_peer, second_peer];
@@ -57,59 +84,79 @@ function combinationsOfPairs(efficiency = [], ignore_index = 0) {
                 second_peer_val
             );
 
-            const new_pair = {
+            pairs.push({
                 first_peer,
                 second_peer,
                 values: [first_peer_val, second_peer_val],
                 difference
-            }
-            pairs.push(new_pair);
+            });
         });
     });
 
     return pairs;
 }
 
+const results = [];
 function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
     const full_pairs_combinations = [];
-    full_pairs_combinations.push(
-        combinationsOfPairs(
-            efficiency.sort(),
-            2
-        )
-    );
+    const efficiencies_by_value = {};
+    efficiency.forEach((element) => {
+        if (!efficiencies_by_value[element]) {
+            efficiencies_by_value[element] = 0;
+        }
+        efficiencies_by_value[element]++;
+    });
 
     efficiency.forEach((_, current_index) => {
+        full_pairs_combinations.push(
+            combinationsOfPairs(
+                efficiency.sort(),
+                current_index,
+            )
+        );
     });
     
     const full_unique_pairs = full_pairs_combinations.map((pairs) => {
         return getUniquePairs(pairs);
     });
-    // fs.writeFileSync("full_unique_pairs.json", JSON.stringify(full_unique_pairs, null, 2));
 
     const full_results = full_unique_pairs.map((unique_pairs) => {
-        return resultOfUniquePairs(unique_pairs);
-    }).sort((a, b) => a - b);
+        return resultOfUniquePairs(
+            unique_pairs,
+            efficiencies_by_value,
+        );
+    }).sort((a, b) => a.result - b.result);
 
-    console.log(full_results)
-
-    return full_results.shift();
+    const first_pair = full_results.shift();
+    
+    results.push(first_pair);
+    
+    return first_pair.result;
 }
 
-// console.log(minResultOfPairs([ 4, 1, 2, 16, 8 ])); // 5
-// console.log(minResultOfPairs([
-//     2, 13, 12, 9,
-//     6,  3,  2
-// ])); // 2
+console.log(minResultOfPairs([
+    36, 73, 66, 25, 70, 28, 96, 62, 88, 51, 30, 32,
+    45, 99, 78, 48, 93, 16,  5, 27, 75, 27, 29, 83,
+    19, 94, 90, 11, 89, 83, 91, 15, 98, 38, 36, 83,
+    83, 81, 22, 44, 71, 71, 90, 73, 30, 52, 22, 77,
+    80, 67, 98,  6, 78, 10, 69, 70, 89
+])); // 34
+console.log(minResultOfPairs([ 4, 1, 2, 16, 8 ])); // 5
+console.log(minResultOfPairs([
+    2, 13, 12, 9,
+    6,  3,  2
+])); // 4
 
-// console.log(minResultOfPairs([
-//     4, 2, 8, 1, 9
-// ])); // 2
+console.log(minResultOfPairs([
+    4, 2, 8, 1, 9
+])); // 2
 console.log(minResultOfPairs([
     90,  3, 90, 65, 48,
     73, 10, 43, 56,  1,
     64
 ])); // 23
+
+console.log(results);
 
 module.exports = function findMinCost(efficiency = []) {
     // Write your code here
