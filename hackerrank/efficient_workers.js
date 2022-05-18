@@ -108,59 +108,73 @@ function filterEqualPairs(arr = []) {
     
     return Object.keys(unique).filter((u) => {
     return unique[u] % 2 !== 0;
-    }).map(Number).sort((a, b) => a - b);
+    }).map(Number);
 }
 
 function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
     efficiency = filterEqualPairs(efficiency);
-    const evaluations = [];
+    efficiency = efficiency.sort((a, b) => a - b);
+    let evaluations = [];
     let ignore_index = null;
     for (let i = 0; i < efficiency.length; i++) {
-        const current_pair = {};
-        const next_pair = {};
-
-        current_pair.first_peer = i;
-        current_pair.second_peer = i + 1;
-        next_pair.first_peer = i + 1;
-        next_pair.second_peer = i + 2;
-        current_pair.difference = Math.abs(
-            efficiency[current_pair.first_peer] - efficiency[current_pair.second_peer]
-        );
-        next_pair.difference = Math.abs(
-            efficiency[current_pair.second_peer] - efficiency[next_pair.second_peer]
-        );
-
         if (ignore_index !== null) {
-            if ((Math.abs(ignore_index - current_pair.first_peer)) >
-                (Math.abs(current_pair.first_peer - current_pair.second_peer))
-            ) {
+            // the case that index exists
+            const current = Math.abs(efficiency[ignore_index] - efficiency[i]);
+            const next = Math.abs(efficiency[i] - efficiency[i + 1]);
+            if (current < next) {
                 evaluations.push({
-                    first_peer: current_pair.first_peer,
-                    second_peer: current_pair.second_peer,
-                    values: [ efficiency[current_pair.first_peer], efficiency[current_pair.second_peer] ],
-                    difference: Math.abs(current_pair.first_peer - current_pair.second_peer)
+                    first_peer: ignore_index,
+                    second_peer: i,
+                    difference: current,
+                    values: [efficiency[ignore_index], efficiency[i]]
                 });
-                continue;
-            } else {
-                // TODO: check if this is the best way to do this
+                ignore_index = null;
             }
-        }
-
-        if (current_pair.difference === next_pair.difference) {
-            evaluations.push(current_pair);
-            ignore_index = null;
-        }
-        if (current_pair.difference < next_pair.difference) {
-            ignore_index = null;
-            evaluations.push(current_pair);
         } else {
-            ignore_index = i;
-            evaluations.push(next_pair);
-            i++;
+            const current = Math.abs(efficiency[i] - efficiency[i + 1]);
+            const next = Math.abs(efficiency[i + 1] - efficiency[i + 2]);
+            if (current < next) {
+                evaluations.push({
+                    first_peer: i,
+                    second_peer: i + 1,
+                    difference: current,
+                    values: [efficiency[i], efficiency[i + 1]]
+                });
+                ignore_index = null;
+            } else {
+                evaluations.push({
+                    first_peer: i + 1,
+                    second_peer: i + 2,
+                    difference: next,
+                    values: [efficiency[i + 1], efficiency[i + 2]]
+                });
+                ignore_index = i;
+            }
         }
         
     }
-    console.log(evaluations);
+    evaluations = evaluations.filter((evaluation) => {
+        return typeof evaluation.difference === "number";
+    });
+    let uniques = [];
+    evaluations.forEach((evaluation) => {
+        const already_used = uniques.find((unique) => {
+            const pairs_already_used = [
+                unique.first_peer,
+                unique.second_peer,
+            ];
+            return pairs_already_used.includes(evaluation.first_peer) 
+                || pairs_already_used.includes(evaluation.second_peer);
+        });
+
+        if (!already_used) {
+            uniques.push(evaluation);
+        }
+    });
+    console.log(uniques);
+    const total = uniques.reduce((acc, curr) => {
+        return acc + curr.difference;
+    }, 0);
     return 0;
 }
 
