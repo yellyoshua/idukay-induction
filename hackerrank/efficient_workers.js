@@ -133,22 +133,37 @@ function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
         } else {
             const current = Math.abs(efficiency[i] - efficiency[i + 1]);
             const next = Math.abs(efficiency[i + 1] - efficiency[i + 2]);
-            if (current < next) {
-                evaluations.push({
-                    first_peer: i,
-                    second_peer: i + 1,
-                    difference: current,
-                    values: [efficiency[i], efficiency[i + 1]]
-                });
-                ignore_index = null;
+            if (evaluations.length) {
+                const last_evaluation = evaluations.pop();
+                if (last_evaluation.difference > current) {
+                    evaluations.push({
+                        first_peer: i,
+                        second_peer: i + 1,
+                        difference: current,
+                        values: [efficiency[i], efficiency[i + 1]]
+                    });
+                } else {
+                    evaluations.push(last_evaluation);
+                }
+                continue;
             } else {
-                evaluations.push({
-                    first_peer: i + 1,
-                    second_peer: i + 2,
-                    difference: next,
-                    values: [efficiency[i + 1], efficiency[i + 2]]
-                });
-                ignore_index = i;
+                if (current < next) {
+                    evaluations.push({
+                        first_peer: i,
+                        second_peer: i + 1,
+                        difference: current,
+                        values: [efficiency[i], efficiency[i + 1]]
+                    });
+                    ignore_index = null;
+                } else {
+                    evaluations.push({
+                        first_peer: i + 1,
+                        second_peer: i + 2,
+                        difference: next,
+                        values: [efficiency[i + 1], efficiency[i + 2]]
+                    });
+                    ignore_index = i;
+                }
             }
         }
         
