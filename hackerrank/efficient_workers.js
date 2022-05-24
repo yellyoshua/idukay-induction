@@ -1,5 +1,5 @@
 function combinationsOfPairs(efficiency = [], ignore_index = 0) {
-    let pairs = [];
+    const pairs = [];
 
     let efficiency_clone = [...efficiency];
 
@@ -7,20 +7,13 @@ function combinationsOfPairs(efficiency = [], ignore_index = 0) {
     efficiency_clone = efficiency_clone.filter((num) => num !== null);
 
     for (let i = 0; i < efficiency_clone.length; i += 2) {
-        if (i + 1 === efficiency_clone.length)
-            break;
+        const isTheLastItem = i + 1 === efficiency_clone.length;
+        if (isTheLastItem) break;
         const current = efficiency_clone[i];
         const next = efficiency_clone[i + 1];
 
         const difference = Math.abs(current - next);
-
-        pairs.push({
-            first_peer: i,
-            second_peer: i + 1,
-            values: [current, next],
-            difference
-        });
-
+        pairs.push({ difference });
     }
 
     return pairs;
@@ -34,15 +27,19 @@ function filterEqualPairs(arr = []) {
         unique[num]++;
     });
 
-    return Object.keys(unique).filter((u) => {
-        return unique[u] % 2 !== 0;
-    }).map(Number);
+    const filterOdds = (num) => unique[u] % 2 !== 0;
+    const toNumber = (num) => Number(num);
+
+    return Object.keys(unique)
+        .filter(filterOdds)
+        .map(toNumber);
 }
 
 function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
+    const NO_EFFICIENCY = 0;
     efficiency = filterEqualPairs(efficiency);
     efficiency = efficiency.sort((a, b) => a - b);
-    if (efficiency.length === 0) return 0;
+    if (!efficiency.length) return NO_EFFICIENCY;
     const pairs_combinations = [];
 
     efficiency.forEach((_, current_index) => {
