@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@jest/globals": "^28.1.0",
-    "jest": "^28.1.0"
+    "jest": "^28.1.0",
+    "underscore": "^1.13.3"
   }
 }
