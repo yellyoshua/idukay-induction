@@ -1,10 +1,14 @@
+import { deepClone } from "./utils";
+
 function createTextField(field, state, onFieldUpdate) {
     const text = document.createElement('input');
+    text.classList.add("custom-input-select")
     text.setAttribute("id", field.selector);
     text.setAttribute("name", field.id);
     text.setAttribute("type", "text");
     text.setAttribute("placeholder", field.label);
-    text.value = state[field.id] || '';
+    state[field.id] ??= "";
+    text.value = state[field.id];
 
     text.addEventListener('input', function(e) {
         onFieldUpdate(field.id, e.target.value);
@@ -19,7 +23,9 @@ function createSelectField(field, state, updateField) {
     select.setAttribute("name", field.id);
     select.setAttribute("type", "select");
     select.setAttribute("placeholder", field.label);
-    select.value = state[field.id] || '';
+    select.classList.add("custom-input-select");
+    state[field.id] ??= "";
+    select.value = state[field.id];
 
     const optionIndicator = document.createElement('option');
     optionIndicator.setAttribute("value", '');
@@ -45,6 +51,7 @@ function createRadioField(field, state, updateField) {
     trueRadio.setAttribute("id", field.selector);
     trueRadio.setAttribute("name", field.id);
     trueRadio.setAttribute("type", "radio");
+    state[field.id] ??= false;
     trueRadio.checked = state[field.id] || false;
 
     const falseRadio = document.createElement('input');
@@ -76,10 +83,35 @@ function createRadioField(field, state, updateField) {
     const radios = document.createElement('div');
     radios.classList.add("radios-group");
 
-    radios.appendChild(trueRadioBox);
-    radios.appendChild(falseRadioBox);
+    const radiosContainer = document.createElement('div');
+    radiosContainer.classList.add("radios-container");
+
+    const radioLabel = document.createElement('p');
+    radioLabel.classList.add("radio-label");
+    radioLabel.innerText = field.label;
+
+    radiosContainer.appendChild(trueRadioBox);
+    radiosContainer.appendChild(falseRadioBox);
+
+    radios.appendChild(radioLabel);
+    radios.appendChild(radiosContainer);
 
     return radios;
+}
+
+function createActionsField(field) {
+    const container = document.createElement("div");
+
+    field.actions.forEach((action) => {
+        const editAction = document.createElement("button");
+        editAction.classList.add("edit-action");
+        editAction.innerHTML = action.label;
+        editAction.addEventListener("click", () => action.handler(field));
+        container.appendChild(editAction);
+    });
+
+
+    return container;
 }
 
 const fieldBuilder = (onFieldUpdate) => {
@@ -94,6 +126,7 @@ const fieldBuilder = (onFieldUpdate) => {
         "text": (field) => createTextField(field, state, updateField),
         "select": (field) => createSelectField(field, state, updateField),
         "radio": (field) => createRadioField(field, state, updateField),
+        "actions": (field) => createActionsField(field),
     }
 }
 
@@ -106,14 +139,19 @@ function createFormField(field, fields_constructor) {
     return fieldBox;
 }
 
-export function createForm(fields = [], onSubmitForm, formSettings = {}) {
+export function createForm(form, fields = [], onSubmitForm, formSettings = {}) {
     let formState = {};
+
+    function resetForm() {
+        formState = {};
+        form.innerHTML = "";
+        createForm(form, fields, onSubmitForm, formSettings);
+    }
 
     const fields_constructor = fieldBuilder(function (state) {
         formState = state;
     });
 
-    const form = document.createElement('form');
     form.classList.add('form-box');
 
     formSettings.formTitle && form.appendChild(
@@ -141,7 +179,12 @@ export function createForm(fields = [], onSubmitForm, formSettings = {}) {
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        onSubmitForm(formState);
+        if (Object.keys(formState).length) {
+            const state = deepClone(formState);
+            resetForm();
+            onSubmitForm(state);
+        }
+        resetForm();
     });
     return form;
 }

@@ -1,6 +1,5 @@
-export function createTable(data = []) {
-    const table = document.createElement('table');
-
+export function createTable(data = [], table) {
+    table.innerHTML = "";
     function createTableHeader(fields) {
         const tableHeader = document.createElement('thead');
         const tableHeaderRow = document.createElement('tr');
@@ -14,7 +13,9 @@ export function createTable(data = []) {
         return tableHeader;
     }
 
-    const header = createTableHeader(Object.keys(data[0]));
+    const header = createTableHeader(
+        data.length ? Object.keys(data[0]) : [],
+    );
     table.appendChild(header);
 
     function creaTeTableBody(data) {

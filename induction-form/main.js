@@ -1,53 +1,61 @@
 import './style.css'
 import { createTable } from "./table"
 import { createForm } from "./form"
+import randomId from "./random-id"
 
 const app = document.getElementById('app');
 
-const table = createTable([
-  {
-    name: 'Jose',
-    country: 'Italy',
-    is_iron_man: false,
-  },
-  {
-    name: 'Maria',
-    country: 'Ecuador',
-    is_iron_man: true,
-  }
-]);
+const users = [];
 
 const countries = [
   {
     label: 'Ecuador',
-    value: 'ec',
+    value: 'Ecuador',
   },
   {
     label: 'Italy',
-    value: 'it',
+    value: 'Italy',
   }
-]
+];
 
-const onFormSubmit = (state) => {
-  console.log(state);
-};
-
-const formTitle = document.createElement('h2');
-formTitle.innerText = 'Person Form';
-
-const form = createForm([
+const formFields = [
   { label: 'Name', id: 'name',  selector: 'name-id', type: 'text' },
   { label: 'Country', id: 'country', selector: 'country-id', type: 'select', options: countries },
   { label: 'Is Iron Man', id: 'is-iron-man', selector: 'ironman-id', type: 'radio' },
-], onFormSubmit, {
-  formTitle,
-  submitButtonText: "Save"
-});
+  { type: "actions", actions: [
+    {
+      label: "Update",
+      handler: () => {
+        console.log("click");
+      }
+    }
+  ] }
+];
+
+const formRef = document.createElement('form');
+const formTitle = document.createElement('h2');
+formTitle.innerText = 'Person Form';
+const tableRef = document.createElement('table');
+createTable(users, tableRef);
+
+const onFormSubmit = (state, resetForm) => {
+  const id = randomId();
+  users.push({ id, ...state });
+  createTable(users, tableRef);
+  // resetForm();
+};
+
+createForm(
+  formRef,
+  formFields,
+  onFormSubmit,
+  { formTitle, submitButtonText: "Save" },
+);
 
 const container = document.createElement('div');
 container.classList.add('container');
 
-container.appendChild(form);
-container.appendChild(table);
+container.appendChild(formRef);
+container.appendChild(tableRef);
 
 app.appendChild(container);
