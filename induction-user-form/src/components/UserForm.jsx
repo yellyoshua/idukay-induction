@@ -40,23 +40,30 @@ export default function UserForm({ initialState, onSubmit }) {
     }, [initialState]);
 
     return <form className="form-box">
-        <h2>CRM</h2>
-        <input
-            value={formState.name}
-            type="text"
-            className="custom-input-select"
-            placeholder="Name"
-            onChange={onUpdateName}
-        />
-        <Select
-            placeHolder="Select country"
-            selected={formState.country}
-            onChange={onSelectCountry}
-            options={countries}
-        />
-        <div className="radios-group">
-            <p className="radio-label">Editable</p>
-            <div className="radios-container">
+        <h2 className="form-title">CRM</h2>
+        <div className="form-row">
+            <p className="form-label">Name</p>
+            <input
+                value={formState.name}
+                type="text"
+                className="form-field custom-input-select"
+                placeholder="Enter name"
+                onChange={onUpdateName}
+            />
+        </div>
+        <div className="form-row">
+            <p className="form-label">Country</p>
+            <Select
+                className="form-field custom-input-select"
+                placeHolder="Select country"
+                selected={formState.country}
+                onChange={onSelectCountry}
+                options={countries}
+            />
+        </div>
+        <div className="form-row">
+            <p className="form-label">Editable</p>
+            <div className="form-field radios-container">
                 <div className="radio-box">
                     Yes <input type="radio" checked={formState.editable} onChange={() => onUpdateEditable(true)} />
                 </div>
@@ -65,6 +72,7 @@ export default function UserForm({ initialState, onSubmit }) {
                 </div>
             </div>
         </div>
+        
         <div className="flex-center-center">
             <button type="button" className="submit-button" onClick={handleSubmit}>
                 <span>Create/Update user</span>

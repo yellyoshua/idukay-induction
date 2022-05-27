@@ -52,6 +52,9 @@ th, td {
 .radios-group {
   margin-left: 5px;
   margin-right: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .radio-box {
@@ -61,6 +64,7 @@ th, td {
 }
 
 .submit-button {
+  margin-top: 10px;
   padding: 10px;
   background-color: #4CAF50;
   color: white;
@@ -74,6 +78,7 @@ th, td {
 .radios-container {
   display: flex;
   margin-top: 5px;
+  width: auto !important;
 }
 
 p {
@@ -82,10 +87,9 @@ p {
 .custom-input-select {
   width: 100%;
   font-size: var(--normal-font-size);
-  padding: 12px 20px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 12px 0px;
+  border: 0px;
+  border-bottom: 1px solid #ccc;
 }
 
 button {
@@ -106,4 +110,33 @@ button:hover {
   background: transparent;
   border: 0px;
   cursor: pointer;
+}
+
+.separator {
+  width: 100%;
+  margin: 20px 0px;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.form-title {
+  text-align: center;
+}
+
+.form-row {
+  padding: 10px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-label {
+  font-size: var(--normal-font-size);
+  margin-right: 5px;
+}
+
+.form-field {
+  font-size: var(--normal-font-size);
+  width: 100%;
+  max-width: 200px;
 }

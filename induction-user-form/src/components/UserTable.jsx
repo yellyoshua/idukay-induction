@@ -2,13 +2,8 @@ import { useContext } from "react";
 import { UsersContext } from "../providers/UsersProvider";
 import PencilAltIcon from "./Icons/PencilAltIcon";
 
-export default function UserTable({ setUserEdit }) {
+export default function UserTable() {
     const {users = []} = useContext(UsersContext);
-
-
-    const handleSetUserEdit = (user) => {
-        setUserEdit(user);
-    }
 
     const renderUser = (user) => {
         const renderEditButton = () => {
@@ -16,7 +11,6 @@ export default function UserTable({ setUserEdit }) {
                 className="button-icon"
                 type="button"
                 disabled={!user.editable}
-                onClick={() => handleSetUserEdit(user)}
             >
                 <PencilAltIcon width={20} height={20}/>
             </button>
