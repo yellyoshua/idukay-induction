@@ -27,7 +27,11 @@ function walkInTheWaze(maze = [[]], maze_result = [], x = 0, y = 0) {
 
     if (maze_result[x] && maze_result[x][y - 1] === 1) {
         maze_result[x][y - 1] = 2;
-        return walkInTheWaze(maze, maze_result, x, y - 1);
+        const maze_tpm = walkInTheWaze(maze, maze_result, x, y - 1);
+        if (maze_tpm[maze_tpm.length - 1].includes(2)) {
+            return maze_tpm;
+        }
+        maze_result[x][y - 1] = 1;
     }
 
     return maze_result;
@@ -38,8 +42,6 @@ module.exports = function snakeGame(maze = [[]]) {
         maze,
         JSON.parse(JSON.stringify(maze)),
     );
-
-    console.log(maze_result);
 
     return maze_result;
 }
