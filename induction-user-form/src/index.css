@@ -127,15 +127,17 @@ button:hover {
 }
 
 .form-row {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
   padding: 10px 0px;
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .form-label {
   font-size: var(--normal-font-size);
-  margin-right: 5px;
+  margin-right: 10px;
+  text-align: right;
 }
 
 .form-field {
