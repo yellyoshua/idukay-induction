@@ -11,4 +11,10 @@ describe('to_numeral_roman', () => {
     it("should convert 2121 to MMCXXI", () => {
         expect(to_numeral_roman(2121)).toBe("MMCXXI");
     });
+    it("should convert 3 to III", () => {
+        expect(to_numeral_roman(3)).toBe("III");
+    });
+    it("should convert 2021 to MMXXI", () => {
+        expect(to_numeral_roman(2021)).toBe("MMXXI");
+    });
 });
