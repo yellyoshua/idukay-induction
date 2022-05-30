@@ -11,7 +11,7 @@ function walkInTheWaze(maze = [[]], {x = 0, y = 0} = {}, steps = [[]], index = 0
     const checkIsLastItemFromX = (activeX) => activeX === (maze.length - 1);
     const checkIsLastItemFromY = (activeY) => activeY === (maze[x].length - 1);
 
-    const max = Math.abs((maze.length * maze[x].length) / 2) + 1;
+    const max = Math.abs(maze.length * maze[0].length);
 
     if (checkIsLastItemFromX(x) && checkIsLastItemFromY(y)) {
         return walkInTheWaze(maze, {x: 0, y: 0}, steps, index + 1);
@@ -72,32 +72,5 @@ function snakeGame(maze = [[]]) {
 
     return result_sort.shift();
 }
-
-snakeGame([
-    [1, 1, 1, 1, 1, 1],
-    [1, 0, 1, 1, 0, 1],
-    [1, 1, 1, 1, 0, 1],
-    [0, 0, 1, 0, 1, 1],
-    [0, 0, 1, 0, 1, 0],
-    [0, 0, 1, 1, 1, 1],
-])
-
-// snakeGame([
-//     [1, 1, 1, 1, 1, 1],
-//     [1, 0, 1, 1, 0, 1],
-//     [1, 1, 1, 1, 0, 1],
-//     [0, 0, 1, 0, 1, 1],
-//     [0, 0, 1, 0, 1, 0],
-//     [0, 0, 1, 1, 1, 1],
-// ]);
-
-// snakeGame([
-//     [1, 1, 1, 1, 1, 1],
-//     [0, 0, 0, 0, 0, 1],
-//     [1, 1, 1, 1, 0, 1],
-//     [0, 0, 1, 0, 1, 1],
-//     [0, 0, 1, 0, 1, 0],
-//     [0, 0, 1, 1, 1, 1],
-// ]);
 
 module.exports = snakeGame;

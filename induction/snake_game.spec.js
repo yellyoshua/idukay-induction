@@ -10,12 +10,11 @@ describe("snakeGame", () => {
             [0, 1, 1, 0],
             [0, 0, 1, 1],
         ])).toStrictEqual([
-            [2, 2, 1, 1],
-            [0, 2, 0, 1],
-            [0, 2, 0, 0],
-            [0, 2, 2, 0],
-            [0, 0, 2, 2],
-        ]);
+            'RIGHT', 'DOWN',
+            'DOWN',  'DOWN',
+            'RIGHT', 'DOWN',
+            'RIGHT', 'END'
+          ]);
     });
 
     it("should return the correct result for the sample input", () => {
@@ -26,12 +25,11 @@ describe("snakeGame", () => {
             [0, 1, 1, 0],
             [0, 0, 1, 1],
         ])).toStrictEqual([
-            [0, 2, 1, 1],
-            [0, 2, 0, 1],
-            [0, 2, 0, 0],
-            [0, 2, 2, 0],
-            [0, 0, 2, 2],
-        ]);
+            'RIGHT', 'DOWN',
+            'DOWN',  'DOWN',
+            'RIGHT', 'DOWN',
+            'RIGHT', 'END'  
+          ]);
     });
 
     it("should return the correct result for the sample input", () => {
@@ -42,12 +40,11 @@ describe("snakeGame", () => {
             [0, 1, 1, 1],
             [0, 0, 1, 1],
         ])).toStrictEqual([
-            [2, 2, 2, 2],
-            [0, 0, 0, 2],
-            [0, 0, 0, 2],
-            [0, 1, 1, 2],
-            [0, 0, 1, 2],
-        ]);
+            'RIGHT', 'RIGHT',
+            'RIGHT', 'DOWN',
+            'DOWN',  'DOWN',
+            'DOWN',  'END'
+          ]);
     });
 
     it("should return the correct result for the sample input", () => {
@@ -58,15 +55,14 @@ describe("snakeGame", () => {
             [0, 1, 1, 1],
             [0, 0, 0, 1],
         ])).toStrictEqual([
-            [2, 2, 1, 1],
-            [0, 2, 0, 1],
-            [0, 2, 0, 1],
-            [0, 2, 2, 2],
-            [0, 0, 0, 2],
-        ]);
+            'RIGHT', 'DOWN',
+            'DOWN',  'DOWN',
+            'RIGHT', 'RIGHT',
+            'DOWN',  'END'
+          ]);
     });
 
-    fit("should return the correct result for the sample input", () => {
+    it("should return the correct result for the sample input", () => {
         expect(snakeGame([
             [1, 1, 1, 1, 1, 0],
             [0, 0, 0, 1, 0, 0],
@@ -85,7 +81,7 @@ describe("snakeGame", () => {
           ]);
     });
 
-    fit("should return the correct result for the sample input", () => {
+    it("should return the correct result for the sample input", () => {
         expect(snakeGame([
             [1, 1, 1, 1, 1, 1],
             [1, 0, 1, 1, 0, 1],
@@ -103,7 +99,7 @@ describe("snakeGame", () => {
           ]);
     });
 
-    fit("should return the correct result for the sample input", () => {
+    it("should return the correct result for the sample input", () => {
         expect(snakeGame([
             [1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 1],
@@ -130,12 +126,12 @@ describe("snakeGame", () => {
             [0, 1, 1, 1],
             [0, 0, 1, 1],
         ])).toStrictEqual([
-            [2, 2, 2, 2],
-            [0, 1, 0, 2],
-            [0, 0, 0, 2],
-            [0, 1, 1, 2],
-            [0, 0, 1, 2],
-        ]);
+            'RIGHT', 'DOWN',
+            'RIGHT', 'RIGHT',
+            'DOWN',  'DOWN',
+            'DOWN',  'DOWN',
+            'END'
+          ]);
     });
 
     it("should return the correct result for the sample input", () => {
@@ -146,11 +142,11 @@ describe("snakeGame", () => {
             [0, 0, 1, 1],
             [0, 0, 1, 1],
         ])).toStrictEqual([
-            [2, 2, 2, 2],
-            [0, 1, 0, 2],
-            [0, 1, 0, 2],
-            [0, 0, 1, 2],
-            [0, 0, 1, 2],
-        ]);
+            'RIGHT', 'DOWN',
+            'RIGHT', 'RIGHT',
+            'DOWN',  'DOWN',
+            'DOWN',  'DOWN',
+            'END'
+          ]);
     });
 });
