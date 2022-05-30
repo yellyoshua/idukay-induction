@@ -1,65 +1,76 @@
-// @ts-check
-function walkInTheWaze(maze = [[]], maze_results = [], {x = 0, y = 0} = {}, index = 0) {
-    const isLastItemFromX = x === (maze.length - 1);
-    const isLastItemFromY = y === (maze[x].length - 1);
+const STEPS = {
+    START: 'START',
+    LEFT: 'LEFT',
+    RIGHT: 'RIGHT',
+    DOWN: 'DOWN',
+    END: 'END',
+}
 
-    if (isLastItemFromX && isLastItemFromY) {
-        return maze_results;
+// @ts-check
+function walkInTheWaze(maze = [[]], {x = 0, y = 0} = {}, steps = [[]], index = 0) {
+    const checkIsLastItemFromX = (activeX) => activeX === (maze.length - 1);
+    const checkIsLastItemFromY = (activeY) => activeY === (maze[x].length - 1);
+
+    const max = Math.abs((maze.length * maze[x].length) / 2) + 1;
+
+    if (checkIsLastItemFromX(x) && checkIsLastItemFromY(y)) {
+        return walkInTheWaze(maze, {x: 0, y: 0}, steps, index + 1);
     }
 
-    maze_results[index] ??= JSON.parse(JSON.stringify(maze));
-    if (x + y === 0 && maze[x][y] === 1) {
-        maze_results[index][x][y] = 2;
+    steps[index] ??= [];
+
+    if (steps[index].length === max) {
+        return steps;
     }
 
     const turnDown = x + 1;
     if (maze[turnDown] && maze[turnDown][y] === 1) {
-        maze_results[index][turnDown][y] = 2;
-        const results = walkInTheWaze(maze, maze_results, {x: turnDown, y}, index);
-        if (results[index][results[index].length - 1].includes(2)) {
-            const mazeCopy = JSON.parse(JSON.stringify(maze));
-            mazeCopy[turnDown][y] = 0;
-            return walkInTheWaze(mazeCopy, maze_results, {}, index + 1);
+        steps[index].push(STEPS.DOWN);
+        maze[turnDown][y] = 0;
+        if (checkIsLastItemFromX(turnDown) && checkIsLastItemFromY(y)) {
+            steps[index].push(STEPS.END);
+        }
+        const result = walkInTheWaze(maze, {x: turnDown, y}, steps, index);
+        if (result[index].includes(STEPS.END)) {
+            return result;
         }
 
-        maze_results[index][turnDown][y] = 1;
+        steps[index].pop();
+        return walkInTheWaze(maze, {x: x - 1, y}, steps, index);
     }
 
     const turnRight = y + 1;
     if (maze[x] && maze[x][turnRight] === 1) {
-        maze_results[index][x][turnRight] = 2;
-        const results = walkInTheWaze(maze, maze_results, {x, y: turnRight}, index);
-        if (results[index][results[index].length - 1].includes(2)) {
-            const mazeCopy = JSON.parse(JSON.stringify(maze));
-            mazeCopy[x][turnRight] = 0;
-            return walkInTheWaze(mazeCopy, maze_results, {}, index + 1);
+        steps[index].push(STEPS.RIGHT);
+
+        if (checkIsLastItemFromX(x) && checkIsLastItemFromY(turnRight)) {
+            steps[index].push(STEPS.END);
         }
-        maze_results[index][x][turnRight] = 1;
+
+        return walkInTheWaze(maze, {x, y: turnRight}, steps, index);
     }
 
     const turnLeft = y - 1;
-    if (maze_results[index][x] && maze_results[index][x][turnLeft] === 1) {
-        maze_results[index][x][turnLeft] = 2;
-        const results = walkInTheWaze(maze, maze_results, {x, y: turnLeft}, index);
-        if (results[index][results[index].length - 1].includes(2)) {
-            return results;
-        }
-        maze_results[index][x][turnLeft] = 1;
+    if (maze[x] && maze[x][turnLeft] === 1) {
+        steps[index].push(STEPS.LEFT);
+        return walkInTheWaze(maze, {x, y: turnLeft}, steps, index);
     }
 
-    return maze_results;
+    return steps;
 }
 
 function snakeGame(maze = [[]]) {
     const maze_result = walkInTheWaze(maze);
 
-    // const maze_result_sort = maze_result.sort((a = [], b = []) => {
-    //     return a.reduce((acc, current) => acc + current, 0) - b.reduce((acc, current) => acc + current, 0);
-    // });
+    const result = maze_result.filter((step) => {
+        return step.includes(STEPS.END);
+    });
 
-    console.log(maze_result)
+    const result_sort = result.sort((a, b) => {
+        return a.length - b.length;
+    });
 
-    return maze_result.shift();
+    return result_sort.shift();
 }
 
 snakeGame([
@@ -69,6 +80,24 @@ snakeGame([
     [0, 0, 1, 0, 1, 1],
     [0, 0, 1, 0, 1, 0],
     [0, 0, 1, 1, 1, 1],
-]);
+])
+
+// snakeGame([
+//     [1, 1, 1, 1, 1, 1],
+//     [1, 0, 1, 1, 0, 1],
+//     [1, 1, 1, 1, 0, 1],
+//     [0, 0, 1, 0, 1, 1],
+//     [0, 0, 1, 0, 1, 0],
+//     [0, 0, 1, 1, 1, 1],
+// ]);
+
+// snakeGame([
+//     [1, 1, 1, 1, 1, 1],
+//     [0, 0, 0, 0, 0, 1],
+//     [1, 1, 1, 1, 0, 1],
+//     [0, 0, 1, 0, 1, 1],
+//     [0, 0, 1, 0, 1, 0],
+//     [0, 0, 1, 1, 1, 1],
+// ]);
 
 module.exports = snakeGame;
