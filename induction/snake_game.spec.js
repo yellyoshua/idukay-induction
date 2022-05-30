@@ -84,7 +84,7 @@ describe("snakeGame", () => {
         ]);
     });
 
-    it("should return the correct result for the sample input", () => {
+    fit("should return the correct result for the sample input", () => {
         expect(snakeGame([
             [1, 1, 1, 1, 1, 1],
             [1, 0, 1, 1, 0, 1],
