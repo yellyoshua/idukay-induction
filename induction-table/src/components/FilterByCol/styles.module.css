@@ -1,0 +1,6 @@
+.filter {
+    outline: none;
+    font-size: var(--normal-font-size);
+    padding: 10px;
+    margin: 0px 10px;
+}
