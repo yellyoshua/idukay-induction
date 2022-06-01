@@ -15,7 +15,7 @@ export default function FilterByCol() {
 
     return (
         <select
-            className={styles.filter}
+            className={`${styles.filter} select-table-filter`}
             onChange={handleColFilter}
             value={colFilter}
         >

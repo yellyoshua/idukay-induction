@@ -14,18 +14,17 @@ export default function useUsersFilter() {
 
     const handleSearchButton = () => {
         const newUsers = users.filter((user) => {
-            if (colFilter === "all") {
-                const searchable = [
+            let searchable = colFilter === "all" ?
+                [
                     user.name,
                     user.email,
                     user.profile,
                     user.interest,
-                ].join(" ").toLowerCase();
-                return searchable.includes(search.toLowerCase());
-            }
-
-            const searchable = user[colFilter].toLowerCase();
-            return searchable.includes(search.toLowerCase());
+                ].join(" ") :
+                user[colFilter];
+            return searchable.toLowerCase().includes(
+                search.toLowerCase()
+            );
         });
         setFilteresUsers(newUsers);
     }
