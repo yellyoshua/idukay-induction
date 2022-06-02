@@ -16,7 +16,6 @@ export default function Controls() {
         let interval;
         if (isAutoMode) {
             interval = setInterval(() => {
-                console.log("auto mode");
                 walkInTheWaze();
                 if (steps.includes(STEPS_DIRECTIONS.END)) {
                     clearInterval(interval);
