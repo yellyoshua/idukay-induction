@@ -39,6 +39,7 @@ export default function UsersProvider(props) {
         <UsersContext.Provider value={{
             users,
             isLoading,
+            fetchUsers,
             fetchCreateUser,
         }}>
             {props.children}

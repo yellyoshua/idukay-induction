@@ -3,7 +3,7 @@ import { UsersContext } from "../providers/UsersProvider";
 import PencilAltIcon from "./Icons/PencilAltIcon";
 
 export default function UserTable({ setUserEdit }) {
-    const { users = [], isLoading } = useContext(UsersContext);
+    const { users = [] } = useContext(UsersContext);
 
     const renderUser = (user) => {
         const renderEditButton = () => {
@@ -51,9 +51,6 @@ export default function UserTable({ setUserEdit }) {
         </thead>
         <tbody>
             {users.map(user => renderUser(user))}
-            <tr className="text-center">
-                {isLoading && <td colSpan={10}>Loading...</td>}
-            </tr>
         </tbody>
     </table>
 }
