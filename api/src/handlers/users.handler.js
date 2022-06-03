@@ -16,7 +16,7 @@ export default function usersHandler(services = {}) {
         async handlerUserCreate(req, res) {
             const newUser = req.body;
             const user = await usersService.createUser(newUser);
-            return user;
+            return res.status(200).json(user);
         }
     }
 }
