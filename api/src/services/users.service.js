@@ -13,5 +13,9 @@ export default function usersService(repositories = {}) {
             if (!user) throw new Error('User not found');
             return usersRepository.update({ _id: id }, data);
         },
+        async createUser(data) {
+            const user = await usersRepository.create(data);
+            return user;
+        }
     };
 }

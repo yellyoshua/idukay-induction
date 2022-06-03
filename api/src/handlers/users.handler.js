@@ -13,5 +13,10 @@ export default function usersHandler(services = {}) {
             const user = await usersService.updateUser(userId, newUser);
             return res.status(200).json(user);
         },
+        async handlerUserCreate(req, res) {
+            const newUser = req.body;
+            const user = await usersService.createUser(newUser);
+            return user;
+        }
     }
 }
