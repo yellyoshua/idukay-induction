@@ -2,8 +2,8 @@ import { useContext } from "react";
 import { UsersContext } from "../providers/UsersProvider";
 import PencilAltIcon from "./Icons/PencilAltIcon";
 
-export default function UserTable() {
-    const {users = []} = useContext(UsersContext);
+export default function UserTable({ setUserEdit }) {
+    const { users = [], isLoading } = useContext(UsersContext);
 
     const renderUser = (user) => {
         const renderEditButton = () => {
@@ -11,13 +11,14 @@ export default function UserTable() {
                 className="button-icon"
                 type="button"
                 disabled={!user.editable}
+                onClick={() => setUserEdit(user)}
             >
                 <PencilAltIcon width={20} height={20}/>
             </button>
         }
         return (
-            <tr key={user.id}>
-                <td>{user.id}</td>
+            <tr key={user._id}>
+                <td>{user._id}</td>
                 <td>{user.name}</td>
                 <td>{user.country || "N/A"}</td>
                 <td>{user.editable ? "Yes" : "No"}</td>
@@ -50,6 +51,9 @@ export default function UserTable() {
         </thead>
         <tbody>
             {users.map(user => renderUser(user))}
+            <tr className="text-center">
+                {isLoading && <td colSpan={10}>Loading...</td>}
+            </tr>
         </tbody>
     </table>
 }

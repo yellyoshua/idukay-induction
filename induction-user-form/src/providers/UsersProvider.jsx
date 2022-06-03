@@ -1,27 +1,46 @@
 import { randomId } from "../utils";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { createUser, getUsers, updateUser } from "../services/users.services";
 
 
 export const UsersContext = createContext({});
 
 export default function UsersProvider(props) {
     const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const addUser = (newUser) => {
-        const existingUser = users.find(user => user.id === newUser.id);
-        if (existingUser) {
-            setUsers(users.map(user => user.id === newUser.id ? newUser : user));
-        } else {
-            setUsers([...users, {...newUser, id: randomId()}]);
-        }
+    const fetchUsers = async () => {
+        setIsLoading(true);
+        const newUsers = await getUsers();
+        setUsers(newUsers);
+        setIsLoading(false);
     }
 
-    const removeUser = (userId) => {
-        setUsers(users.filter(user => user.id !== userId));
+    const fetchUpdateUser = async (user_id, data) => {
+        setIsLoading(true);
+        await updateUser(user_id, data);
+        setIsLoading(false);
+        await fetchUsers();
     }
+
+    const fetchCreateUser = async (user) => {
+        setIsLoading(true);
+        if (user._id) await fetchUpdateUser(user._id, user);
+        else await createUser(user);
+        setIsLoading(false);
+        await fetchUsers();
+    }
+
+    useEffect(() => {
+        fetchUsers();
+    }, [])
 
     return (
-        <UsersContext.Provider value={{ users, addUser, removeUser }}>
+        <UsersContext.Provider value={{
+            users,
+            isLoading,
+            fetchCreateUser,
+        }}>
             {props.children}
         </UsersContext.Provider>
     );
