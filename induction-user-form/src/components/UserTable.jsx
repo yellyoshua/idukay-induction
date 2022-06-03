@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UsersContext } from "../providers/UsersProvider";
 import PencilAltIcon from "./Icons/PencilAltIcon";
+import UserRow from "./UserRow";
 
 export default function UserTable({ setUserEdit }) {
     const { users = [] } = useContext(UsersContext);
@@ -50,7 +51,10 @@ export default function UserTable({ setUserEdit }) {
             </tr>
         </thead>
         <tbody>
-            {users.map(user => renderUser(user))}
+            {users.map(user => {
+                return <UserRow user={user} handleAddUser={() => {}} key={user._id} />
+            })}
+            {/* {users.map(user => renderUser(user))} */}
         </tbody>
     </table>
 }
