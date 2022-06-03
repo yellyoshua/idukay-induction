@@ -1,5 +1,7 @@
-import logsHandler from "./logs.handler.js"
+import usersHandler from "./users.handler.js";
 
-export default {
-    logsHandler,
-}
+export default function configureHandlers(services) {
+    return {
+        usersHandler: usersHandler(services),
+    };
+};

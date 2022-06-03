@@ -1,25 +1,64 @@
-import express from "express"
-import bodyParser from "body-parser"
-import middlewares from "./middlewares/index.js"
-import handlers from "./handlers/index.js"
-import logsHelper from "./helpers/logs.helper.js"
+import "dotenv/config";
+import express from "express";
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
+import repositories from "./repositories.js";
+import configureServices from "./services/index.js";
+import configureHandlers from "./handlers/index.js";
+import routes from "./routes.js";
+
+const services = configureServices(repositories);
+const handlers = configureHandlers(services);
 
 const app = express()
 const port = process.env.PORT || 3000
 
-// add bodyParser to app
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use(middlewares.logging(logsHelper));
+routes(app, handlers);
+app.get("/", (req, res) => res.json({ message: "Hello World" }));
 
-app.get("/logs", handlers.logsHandler);
-
-app.use(middlewares.authentication);
-
-// create a listener for the server
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+process.on("SIGINT", (err) => {
+    console.log(err);
+    console.log("\nStopping server...");
+    mongoose.connection.close(() => {
+        console.log("Disconnected");
+        console.log("Server stopped");
+        process.exit(0);
+    });
+    console.log("Server stopped");
+    process.exit(0);
 });
+
+function onErrorConnect(err) {
+    process.emit("SIGINT", err);
+}
+
+function dbConnect() {
+    return new Promise((resolve, reject) => {
+        const connectionResolver = (err) => {
+            if (err)
+                reject(err);
+            resolve(mongoose.connection);
+        };
+
+        mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+        }, connectionResolver);
+    });
+}
+
+function startApp() {
+    app.listen(port, () => {
+        console.log(`Server started on port ${port}`)
+    })
+}
+
+app.on("error", onErrorConnect);
+
+dbConnect()
+    .then(startApp)
+    .catch(onErrorConnect);
 
 export default app;
