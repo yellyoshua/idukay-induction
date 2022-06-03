@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import cors from "cors";
 import repositories from "./repositories.js";
 import configureServices from "./services/index.js";
 import configureHandlers from "./handlers/index.js";
@@ -11,7 +12,9 @@ const services = configureServices(repositories);
 const handlers = configureHandlers(services);
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
+
+app.use(cors());
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
