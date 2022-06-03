@@ -109,4 +109,46 @@ describe("user service", () => {
             });
         });
     });
+
+    describe("createUser", () => {
+        it("should create user", async () => {
+            const services = {
+                usersService: {
+                    createUser: jest.fn((data) => {
+                        return {...data, _id: "5e9f8f8f8f8f8f8f8f8f8f8"};
+                    }),
+                }
+            };
+
+            const req = {
+                body: {
+                    name: "John Doe",
+                    country: "EC",
+                    editable: true,
+                }
+            };
+
+            const res = {
+                json: jest.fn().mockReturnThis(),
+                status: jest.fn().mockReturnThis(),
+            };
+           
+            await usersHandler(services).handlerUserCreate(req, res);
+            expect(services.usersService.createUser).toHaveBeenCalled();
+            expect(services.usersService.createUser).toHaveBeenCalledWith({
+                name: "John Doe",
+                country: "EC",
+                editable: true,
+            })
+            expect(res.status).toHaveBeenCalled();
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalled();
+            expect(res.json).toHaveBeenCalledWith({
+                _id: "5e9f8f8f8f8f8f8f8f8f8f8",
+                name: "John Doe",
+                country: "EC",
+                editable: true,
+            });
+        });
+    });
 });

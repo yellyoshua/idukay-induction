@@ -93,4 +93,33 @@ describe("user service", () => {
             expect(repositories.usersRepository.update).not.toHaveBeenCalled();
         });
     });
+
+    describe("createUser", () => {
+        it("should create user", async () => {
+            const repositories = {
+                usersRepository: {
+                    create: jest.fn((data) => {
+                        return {...data, _id: "5e9f8f8f8f8f8f8f8f8f8f8"};
+                    }),
+                }
+            }
+
+            await expect(usersService(repositories).createUser({
+                name: "John Doe",
+                country: "EC",
+                editable: false,
+            })).resolves.toEqual({
+                _id: "5e9f8f8f8f8f8f8f8f8f8f8",
+                name: "John Doe",
+                country: "EC",
+                editable: false,
+            });
+            expect(repositories.usersRepository.create).toHaveBeenCalled();
+            expect(repositories.usersRepository.create).toHaveBeenCalledWith({
+                name: "John Doe",
+                country: "EC",
+                editable: false,
+            });
+        });
+    });
 });
