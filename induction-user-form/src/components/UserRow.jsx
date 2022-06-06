@@ -1,7 +1,9 @@
 import { useState } from "react";
-import PencilAltIcon from "./Icons/PencilAltIcon";
+import CloudUploadIcon from "../icons/CloudUploadIcon";
+import PencilAltIcon from "../icons/PencilAltIcon";
+import CountriesSelector from "./CountriesSelector";
 
-export default function UserRow({ user, handleAddUser }) {
+export default function UserRow({ user, handleAddUser, isLoading }) {
     const [iseEditable, setIsEditable] = useState(false);
     const [currentUser, setCurrentUser] = useState(user);
 
@@ -10,6 +12,15 @@ export default function UserRow({ user, handleAddUser }) {
     }
 
     const renderEditableField = (field) => {
+        if (field === "country") {
+            return <td>
+                <CountriesSelector
+                    className="form-field custom-input-select"
+                    selected={currentUser[field]}
+                    onChange={(ev) => handleEdit(field, ev.target.value)}
+                />
+            </td>
+        }
         if (field === "editable") {
             return (
                 <td>
@@ -25,6 +36,8 @@ export default function UserRow({ user, handleAddUser }) {
             <td>
                 <input
                     type="text"
+                    className="form-field custom-input-select input-row-edit"
+                    placeholder="Enter value"
                     value={currentUser[field]}
                     onChange={({target: {value}}) => handleEdit(field, value)}
                 />
@@ -38,6 +51,7 @@ export default function UserRow({ user, handleAddUser }) {
             type="button"
             disabled={!user.editable}
             onClick={() => setIsEditable(true)}
+            title="Edit user"
         >
             <PencilAltIcon width={20} height={20}/>
         </button>
@@ -47,19 +61,20 @@ export default function UserRow({ user, handleAddUser }) {
         return <button
             className="button-icon"
             type="button"
-            disabled={!user.editable}
+            disabled={isLoading}
             onClick={() => {
                 handleAddUser(currentUser);
                 setIsEditable(false);
             }}
+            title="Save user changes"
         >
-        🤩
+            <CloudUploadIcon width={20} height={20} />
         </button>
     }
 
     return (
         <tr key={user._id}>
-            <td>{user._id}</td>
+            <td>{user.code}</td>
             {iseEditable ?
                 renderEditableField("name") :
                 <td>{user.name}</td>}
