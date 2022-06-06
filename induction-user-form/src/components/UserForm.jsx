@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import Select from "./Select";
+import CountriesSelector from "./CountriesSelector";
 
-const countries = [
-    { value: "US", label: "United States" },
-    { value: "CA", label: "Canada" },
-    { value: "MX", label: "Mexico" },
-    { value: "EC", label: "Ecuador" },
-];
 const defaultUser = { name: '', country: '', editable: false };
 
 export default function UserForm({ initialState, onSubmit }) {
@@ -53,12 +47,10 @@ export default function UserForm({ initialState, onSubmit }) {
         </div>
         <div className="form-row">
             <p className="form-label">Country</p>
-            <Select
+            <CountriesSelector
                 className="form-field custom-input-select"
-                placeHolder="Select country"
                 selected={formState.country}
                 onChange={onSelectCountry}
-                options={countries}
             />
         </div>
         <div className="form-row">
