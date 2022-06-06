@@ -3,6 +3,13 @@ import CloudUploadIcon from "../icons/CloudUploadIcon";
 import PencilAltIcon from "../icons/PencilAltIcon";
 import CountriesSelector from "./CountriesSelector";
 
+const countries = {
+    US: "United States",
+    CA: "Canada",
+    MX: "Mexico",
+    EC: "Ecuador",
+};
+
 export default function UserRow({ user, handleAddUser, isLoading }) {
     const [iseEditable, setIsEditable] = useState(false);
     const [currentUser, setCurrentUser] = useState(user);
@@ -80,7 +87,7 @@ export default function UserRow({ user, handleAddUser, isLoading }) {
                 <td>{user.name}</td>}
             {iseEditable ?
                 renderEditableField("country") :
-                <td>{user.country}</td>}
+                <td>{countries[user.country]}</td>}
             {iseEditable ?
                 renderEditableField("editable") :
                 <td>{user.editable ? "Yes" : "No"}</td>}
