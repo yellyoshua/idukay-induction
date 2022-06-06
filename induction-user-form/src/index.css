@@ -164,3 +164,7 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+
+.input-row-edit {
+  width: 100px;
+}
