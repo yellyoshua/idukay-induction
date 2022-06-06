@@ -24,11 +24,11 @@ export function isUserCodeValid(code = "") {
 		charsIncludes = "",
 		numbersIncludes = "";
 
-	for (let i = 0; i < code.length; i++) {
-		if (SPECIAL_CHARS.includes(code[i])) specialCharsIncludes += code[i];
-		if (CHARS.includes(code[i])) charsIncludes += code[i];
-		if (NUMBERS.includes(code[i])) numbersIncludes += code[i];
-	}
+	code.split("").forEach(char => {
+		if (SPECIAL_CHARS.includes(char)) specialCharsIncludes += char;
+		if (CHARS.includes(char)) charsIncludes += char;
+		if (NUMBERS.includes(char)) numbersIncludes += char;
+	});
 
 	if (specialCharsIncludes.length === 1 && charsIncludes.length >= 5 && numbersIncludes.length >= 5) return true;
 	return false;
