@@ -27,7 +27,7 @@ function filterEqualPairs(arr = []) {
         unique[num]++;
     });
 
-    const filterOdds = (num) => unique[u] % 2 !== 0;
+    const filterOdds = (num) => unique[num] % 2 !== 0;
     const toNumber = (num) => Number(num);
 
     return Object.keys(unique)
@@ -64,35 +64,35 @@ function minResultOfPairs(efficiency = [4, 2, 8, 1, 9]) {
     return pairs_efficiencies.shift();
 }
 
-console.log(minResultOfPairs([
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-])); // 0
+// console.log(minResultOfPairs([
+//     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+//     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+//     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+//     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+//     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+// ])); // 0
 
-console.log(minResultOfPairs([
-    36, 73, 66, 25, 70, 28, 96, 62, 88, 51, 30, 32,
-    45, 99, 78, 48, 93, 16, 5, 27, 75, 27, 29, 83,
-    19, 94, 90, 11, 89, 83, 91, 15, 98, 38, 36, 83,
-    83, 81, 22, 44, 71, 71, 90, 73, 30, 52, 22, 77,
-    80, 67, 98, 6, 78, 10, 69, 70, 89
-])); // 34
-console.log(minResultOfPairs([4, 1, 2, 16, 8])); // 5
-console.log(minResultOfPairs([
-    2, 13, 12, 9,
-    6, 3, 2
-])); // 4
+// console.log(minResultOfPairs([
+//     36, 73, 66, 25, 70, 28, 96, 62, 88, 51, 30, 32,
+//     45, 99, 78, 48, 93, 16, 5, 27, 75, 27, 29, 83,
+//     19, 94, 90, 11, 89, 83, 91, 15, 98, 38, 36, 83,
+//     83, 81, 22, 44, 71, 71, 90, 73, 30, 52, 22, 77,
+//     80, 67, 98, 6, 78, 10, 69, 70, 89
+// ])); // 34
+// console.log(minResultOfPairs([4, 1, 2, 16, 8])); // 5
+// console.log(minResultOfPairs([
+//     2, 13, 12, 9,
+//     6, 3, 2
+// ])); // 4
 
-console.log(minResultOfPairs([
-    4, 2, 8, 1, 9
-])); // 2
-console.log(minResultOfPairs([
-    90, 3, 90, 65, 48,
-    73, 10, 43, 56, 1,
-    64
-])); // 23
+// console.log(minResultOfPairs([
+//     4, 2, 8, 1, 9
+// ])); // 2
+// console.log(minResultOfPairs([
+//     90, 3, 90, 65, 48,
+//     73, 10, 43, 56, 1,
+//     64
+// ])); // 23
 
 module.exports = function findMinCost(efficiency = []) {
     // Write your code here
