@@ -9,9 +9,13 @@ export default function repositoryController(model = mongoose.Model) {
             return await model.find(query);
         },
         create: async (data = {}) => {
+            if (!data || !Object.keys(data).length)
+                throw new Error("No data provided");
             return await model.create(data);
         },
         update: async (query = {}, data = {}) => {
+            if (!data || !Object.keys(data).length)
+                throw new Error("No data provided");
             return await model.updateOne(query, data);
         },
     }
