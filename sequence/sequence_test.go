@@ -135,7 +135,48 @@ func TestBigFloatSequence(t *testing.T) {
 	for _, test := range tests {
 		got := BigFloatSequence(test.index)
 		if got.Cmp(test.want) != 0 {
-			t.Errorf("BigFloatSequence(%v) = %v, want %v", test.index, got.String(), test.want)
+			val, _ := got.Float64()
+			t.Errorf("BigFloatSequence(%v) = %v, want %v", test.index, int64(val), test.want)
+		}
+	}
+}
+
+func TestModSequence(t *testing.T) {
+	tests := []test_sequence_struct{
+		{
+			index: big.NewInt(4),
+			want:  big.NewInt(3),
+		},
+		{
+			index: big.NewInt(76),
+			want:  big.NewInt(39),
+		},
+		{
+			index: big.NewInt(545421),
+			want:  big.NewInt(272712),
+		},
+		{
+			index: big.NewInt(50),
+			want:  big.NewInt(26),
+		},
+		{
+			index: big.NewInt(25),
+			want:  big.NewInt(14),
+		},
+		{
+			index: big.NewInt(87123641123172368),
+			want:  big.NewInt(43561820561586185),
+		},
+		{
+			index: big.NewInt(81239812739128371),
+			want:  big.NewInt(40619906369564188),
+		},
+	}
+
+	for _, test := range tests {
+		got, mod := ModSequence(test.index)
+		if got.Cmp(test.want) != 0 {
+			t.Errorf("ModSequence(%v) (%v) = %v, want %v", test.index, mod, got.String(), test.want)
 		}
 	}
 }

@@ -12,6 +12,28 @@ func Sequence(index *big.Int) big.Int {
 	return *index
 }
 
+func ModSequence(index *big.Int) (big.Int, int64) {
+	indexClone := new(big.Int).Set(index)
+	var mod big.Int
+	mod.Mod(indexClone, big.NewInt(4))
+	
+	modVal := mod.Int64()
+	
+	switch modVal {
+	case 0:
+		indexClone.Add(indexClone, big.NewInt(2))
+	case 1:
+		indexClone.Add(indexClone, big.NewInt(3))
+	case 2:
+		indexClone.Add(indexClone, big.NewInt(4))
+	case 3:
+		indexClone.Add(indexClone, big.NewInt(5))
+	}
+	indexClone.Div(indexClone, big.NewInt(2))
+	
+	return *indexClone, modVal
+}
+
 func FloatSequence(index float64) (float64, int64) {
 	index = index / 2
 	index = index + 1

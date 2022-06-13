@@ -1,3 +1,4 @@
+const __ = require("underscore");
 
 // [1, 2, 3, 4, 3, 4, 5, 6, 5, 6, 7, 8]
 function sequence_recursive(limit = 10, prev = 0, next = 1, values = []) {
@@ -36,7 +37,7 @@ function sequence_inneficient(limit = 10) {
     const values = []
     for (let i = 0; true ; i += 2) {
         for (let j = 1; j <= 4; j++) {
-            values.push(i + j);
+            values.push({ i, j, value: i + j });
             if ((values.length - 1) === limit) {
                 return values;
             }
@@ -44,6 +45,6 @@ function sequence_inneficient(limit = 10) {
     }
 }
 
-console.log(sequence_inneficient(76));
+console.log(__.chunk(sequence_inneficient(50), 4));
 
 module.exports = sequence_efficient;
